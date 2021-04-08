@@ -1,0 +1,33 @@
+<%= form_with(model: discussion) do |form| %>
+
+  <% if discussion.errors.any? %>
+    <div id="error_explanation">
+      <h4><%= pluralize(discussion.errors.count, "error") %> prevented this discussion of being saved:</h4>
+      <ul class="list-unstyled">
+        <% discussion.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", placeholder: "How do you call?" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :pinned, class: "form-label" %>
+    <%= form.check_box :pinned%>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :closed, class: "form-label" %>
+    <%= form.check_box :closed%>
+  </div>
+
+  <div class="mb-3">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+
+<% end %>
