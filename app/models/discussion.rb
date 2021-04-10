@@ -7,6 +7,7 @@ class Discussion < ApplicationRecord
 
   validates :name, presence: true
   has_many :posts, dependent: :destroy
+  accepts_nested_attributes_for :posts
 
   def to_param
     "#{id}-#{name.downcase}".parameterize
