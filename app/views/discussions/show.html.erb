@@ -2,7 +2,7 @@
 
 <%= render(partial: "discussions/header", locals: { discussion: @discussion }) %>
 
-<div class="mt-4">
+<div class="mt-4" id="posts">
   <%= render partial: "discussions/posts/post", collection: @posts %>
 </div>
 
