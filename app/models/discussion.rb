@@ -1,5 +1,6 @@
 class Discussion < ApplicationRecord
   belongs_to :user, default: -> { Current.user }
+  belongs_to :category, counter_cache: true, touch: true 
 
   after_create_commit -> { broadcast_prepend_to "discussions"}
   after_update_commit -> { broadcast_replace_to "discussions"}
