@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   root to: "main#index"
   resources :discussions do
     resources :posts, only: [:create, :edit, :update, :show, :destroy], module: :discussions
+
+    collection do
+      get "category/:id", to: "categories/discussions#index", as: :category
+    end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   mount Attractor::Rails::Engine, at: "/attractor" if Rails.env.development?

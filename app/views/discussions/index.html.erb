@@ -1,12 +1,26 @@
-<%= turbo_stream_from "discussions" %>
+<% if @category.present? %>
+  <%= turbo_stream_from @category %>
+<% else %>
+  <%= turbo_stream_from "discussions" %>
+ <% end %> 
 <div class="d-flex justify-content-between align-items-center">
   <h1>Discussions</h1>
   <%= link_to "New Discussion", new_discussion_path, class: "btn btn-primary" %>
 </div>
 <div class="row mt-4">
+  <div class="col-2">
+    <%= turbo_stream_from "categories" %>
+    <h5><%= link_to "Categories", discussions_path %></h5>
+    <div id="categories">
+      <%= render(partial: "categories/category", collection: Category.sorted) %>
+    </div>
+  </div>
   <div class="col">
+  <% if @category %>
+    <h4> Viewing discussions in <%= @category.name %>
+  <% end %>
     <div id="discussions">
-      <%= render @discussions %>
+      <%= render partial: "discussions/discussion", collection: @discussions %>
     </div>
   </div>
 </div>

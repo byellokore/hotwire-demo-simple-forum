@@ -3,6 +3,7 @@
   Pinned: <%= discussion.pinned %> | Closed: <%= discussion.closed %>
   <div>
     <%= link_to "Edit", edit_discussion_path(discussion) %> |
-    <%= link_to "Delete", discussion, method: :delete, data: { confirm: "Sure?"} %>
+    <%= link_to "Delete", discussion, method: :delete, data: { confirm: "Sure?"} %> <br />
+    Posted in: <%= discussion.category_name %> | Posts: <%= discussion.posts_count %>
   </div>
 </div>

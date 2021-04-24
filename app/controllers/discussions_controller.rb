@@ -3,7 +3,7 @@ class DiscussionsController < ApplicationController
   before_action :set_discussion, only: [:edit, :update, :destroy, :show]
 
   def index
-    @discussions = Discussion.all.order(updated_at: :desc)
+    @discussions = Discussion.includes(:category).all.order(updated_at: :desc)
   end
 
   def show
@@ -36,6 +36,20 @@ class DiscussionsController < ApplicationController
     respond_to do |format|
       if @discussion.update(discussion_params)
         @discussion.broadcast_replace(partial: "discussions/header", locals: { discussion: @discussion })
+
+        if @discussion.saved_change_to_category_id?
+          old_category_id, new_category_id = @discussion.saved_change_to_category_id 
+           
+          old_category = Category.find(old_category_id)
+          new_category = Category.find(new_category_id)
+
+          @discussion.broadcast_remove_to(old_category)
+          @discussion.broadcast_prepend_to(new_category)
+
+          old_category.reload.broadcast_replace_to("categories")
+          new_category.reload.broadcast_replace_to("categories")
+        end
+
         format.html { redirect_to @discussion, notice: "Discussion Updated"}
       else
         format.html { render :edit, status: :unprocessable_entity}
