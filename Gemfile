@@ -61,3 +61,5 @@ gem "hotwire-rails", "~> 0.1.3"
 gem "devise", "~> 4.7"
 
 gem "rubocop", "~> 1.12"
+
+gem "pagy", "~> 4.7"
