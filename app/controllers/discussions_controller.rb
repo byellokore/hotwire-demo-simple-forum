@@ -3,11 +3,11 @@ class DiscussionsController < ApplicationController
   before_action :set_discussion, only: [:edit, :update, :destroy, :show]
 
   def index
-    @discussions = Discussion.includes(:category).all.pinned_first.order(updated_at: :desc)
+    @discussions = Discussion.includes(:category).pinned_first.order(updated_at: :desc)
   end
 
   def show
-    @posts = @discussion.posts.includes(:user, :rich_text_body).all.order(:created_at)
+    @posts = @discussion.posts.includes(:user, :rich_text_body).order(:created_at)
     @new_post = @discussion.posts.new
   end
 
