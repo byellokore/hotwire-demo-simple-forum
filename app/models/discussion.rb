@@ -10,6 +10,15 @@ class Discussion < ApplicationRecord
 
   validates :name, presence: true
   has_many :posts, dependent: :destroy
+  has_many :users, through: :posts
+  has_many :discussion_subscriptions, dependent: :destroy
+  has_many :optint_subscribers, -> { where(discussion_subscriptions: { discussion_type: :optin }) },
+           through: :discussion_subscriptions,
+           source: :user
+  has_many :optout_subscribers, -> { where(discussion_subscriptions: { discussion_type: :optout }) },
+           through: :discussion_subscriptions,
+           source: :user
+
 
   accepts_nested_attributes_for :posts
 
@@ -19,5 +28,49 @@ class Discussion < ApplicationRecord
 
   def to_param
     "#{id}-#{name.downcase}".parameterize
+  end
+
+  def subscribed_users
+    (users + optint_subscribers).uniq - optout_subscribers
+  end
+
+  def subscription_for(user)
+    return nil if user.nil?
+    discussion_subscriptions.find_by(user_id: user.id)
+  end
+
+  def toggle_subscription(user)
+    if subscription = subscription_for(user)
+      subscription.toggle!
+    elsif posts.where(user_id: user.id).any?
+      discussion_subscriptions.create(user: user, subscription_type: "optout")
+    else
+      discussion_subscriptions.create(user: user, subscription_type: "optin")
+    end
+  end
+
+  def subscribed?(user)
+    return false if user.nil?
+    if subscription = subscription_for(user)
+      subscription.subscription_type == "optin"
+    else
+      posts.where(user_id: user.id).any?
+    end
+  end
+
+  def subscribed_reason(user)
+    return "You're not receiving notifications from this thread" if user.nil?
+
+    if subscription = subscription_for(user)
+      if subscription.subscription_type == "optin"
+        "You are receinving notifications"
+      elsif subscription.subscription_type == "optout"
+        "You're ignoring this thread"
+      end
+    elsif posts.where(user_id: user.id).any?
+      "You're receiving notifications because you've posted to this thread"
+    else
+      "You're not receiving notifications from this thread"
+    end
   end
 end
