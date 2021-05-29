@@ -3,7 +3,7 @@ module Categories
     before_action :authenticate_user!
     before_action :set_category
     def index
-      @pagy @discussions = pagy(@category.discussions.includes(:category).pinned_first.order(updated_at: :desc))
+      @pagy, @discussions = pagy(@category.discussions.includes(:category).pinned_first.order(updated_at: :desc))
       render 'discussions/index'
     end
 

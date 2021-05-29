@@ -23,12 +23,17 @@ module Discussions
     end
 
     def create
-      @post = @discussion.posts.new(post_params)
-      @new_post = @discussion.posts.new
+      @post = @discussion.posts.new(body: params[:post][:body])
       respond_to do |format|
         if @post.save
-          format.turbo_stream
-          format.html { render :new, notice: "Post Created" }
+          if params.dig("post", "redirect").present?
+            p "Porra DO CACATE"
+            @pagy, @posts = pagy(@discussion.posts.order(created_at: :desc))
+            format.html { redirect_to discussion_path(@discussion, page: @pagy.last), notice: "Post Created" }
+          else
+            @post = @discussion.posts.new
+            format.turbo_stream
+          end
         else
           format.turbo_stream
           format.html { render :new, status: :unprocessable_entity }
@@ -57,7 +62,7 @@ module Discussions
     end
 
     def post_params
-      params.require(:post).permit(:body)
+      params.require(:post).permit(:body, :redirect)
     end
   end
 end
