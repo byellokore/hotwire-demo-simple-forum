@@ -1,7 +1,9 @@
 <h4>Notifications</h4>
 <p><%= discussion.subscribed_reason(user) %></p>
 <% if discussion.subscribed?(user) %>
-  <%= button_to "Unsubscribe", root_path, class: "btn btn-primary btm-sm" %>
+  <%= button_to "Unsubscribe", discussion_notifications_path(discussion), method: :post, class: "btn btn-primary btm-sm" %>
 <% else %>
-  <%= button_to "Subscribe", root_path, class: "btn btn-default btm-sm" %>
+  <%= button_to "Subscribe", discussion_notifications_path(discussion), method: :post, class: "btn btn-default btm-sm" %>
 <% end %>
+
+

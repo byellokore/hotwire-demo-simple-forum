@@ -4,9 +4,9 @@ class Discussion < ApplicationRecord
 
   broadcasts_to :category, inserts_by: :prepend
 
-  after_create_commit -> { broadcast_prepend_to "discussions" }
-  after_update_commit -> { broadcast_replace_to "discussions" }
-  after_destroy_commit -> { broadcast_remove_to "discussions" }
+  after_create_commit -> { broadcast_prepend_to 'discussions' }
+  after_update_commit -> { broadcast_replace_to 'discussions' }
+  after_destroy_commit -> { broadcast_remove_to 'discussions' }
 
   validates :name, presence: true
   has_many :posts, dependent: :destroy
@@ -43,16 +43,16 @@ class Discussion < ApplicationRecord
     if subscription = subscription_for(user)
       subscription.toggle!
     elsif posts.where(user_id: user.id).any?
-      discussion_subscriptions.create(user: user, subscription_type: "optout")
+      discussion_subscriptions.create(user: user, subscription_type: 'optout')
     else
-      discussion_subscriptions.create(user: user, subscription_type: "optin")
+      discussion_subscriptions.create(user: user, subscription_type: 'optin')
     end
   end
 
   def subscribed?(user)
     return false if user.nil?
     if subscription = subscription_for(user)
-      subscription.subscription_type == "optin"
+      subscription.subscription_type == 'optin'
     else
       posts.where(user_id: user.id).any?
     end
@@ -61,10 +61,11 @@ class Discussion < ApplicationRecord
   def subscribed_reason(user)
     return "You're not receiving notifications from this thread" if user.nil?
 
-    if subscription = subscription_for(user)
-      if subscription.subscription_type == "optin"
-        "You are receinving notifications"
-      elsif subscription.subscription_type == "optout"
+    if (subscription = subscription_for(user))
+      case subscription.subscription_type
+      when 'optin'
+        "You are receiving notifications"
+      when 'optout'
         "You're ignoring this thread"
       end
     elsif posts.where(user_id: user.id).any?

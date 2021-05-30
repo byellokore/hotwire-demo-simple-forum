@@ -8,6 +8,10 @@ Rails.application.routes.draw do
     collection do
       get "category/:id", to: "categories/discussions#index", as: :category
     end
+
+    resources :notifications, only: :create, module: :discussions
+
+
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   mount Attractor::Rails::Engine, at: "/attractor" if Rails.env.development?
