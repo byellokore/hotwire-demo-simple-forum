@@ -12,10 +12,10 @@ class Discussion < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :users, through: :posts
   has_many :discussion_subscriptions, dependent: :destroy
-  has_many :optint_subscribers, -> { where(discussion_subscriptions: { discussion_type: :optin }) },
+  has_many :optint_subscribers, -> { where(discussion_subscriptions: { subscription_type: :optin }) },
            through: :discussion_subscriptions,
            source: :user
-  has_many :optout_subscribers, -> { where(discussion_subscriptions: { discussion_type: :optout }) },
+  has_many :optout_subscribers, -> { where(discussion_subscriptions: { subscription_type: :optout }) },
            through: :discussion_subscriptions,
            source: :user
 

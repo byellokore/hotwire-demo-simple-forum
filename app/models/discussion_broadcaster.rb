@@ -41,8 +41,8 @@ class DiscussionBroadcaster
     old_category = Category.find(old_category_id)
     new_category = Category.find(new_category_id)
 
-    move_discussion_to_category(old_category,new_category)
-    update_categories(old_category,new_category)
+    move_discussion_to_category(old_category, new_category)
+    update_categories(old_category, new_category)
   end
 end
 

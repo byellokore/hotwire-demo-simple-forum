@@ -63,3 +63,5 @@ gem "devise", "~> 4.7"
 gem "rubocop", "~> 1.12"
 
 gem "pagy", "~> 4.7"
+
+gem "noticed", "~> 1.4"
